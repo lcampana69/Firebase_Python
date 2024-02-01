@@ -1,0 +1,41 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta Firebase</title>
+</head>
+<body>
+    <h1>Consulta Firebase ABP GlobalSat</h1>
+    <form id="dateForm">
+        <label for="startDate">Fecha de inicio (DD/MM/YYYY):</label>
+        <input type="text" id="startDate" name="startDate" required>
+        <br>
+        <label for="endDate">Fecha de fin (DD/MM/YYYY):</label>
+        <input type="text" id="endDate" name="endDate" required>
+        <br>
+        <button type="submit">Obtener Datos</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('dateForm').onsubmit = async function(event) {
+            event.preventDefault();
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            const response = await fetch('/api/index', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ startDate, endDate }),
+            });
+
+            const result = await response.text();
+            document.getElementById('result').innerText = `Resultado: ${result}`;
+        }
+    </script>
+</body>
+</html>
