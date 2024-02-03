@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Consulta Firebase ABP GlobalSat</h1>
-    <form id="dateForm">
+    <form method="post">
         <label for="startDate">Fecha de inicio (DD/MM/YYYY):</label>
         <input type="text" id="startDate" name="startDate" required>
         <br>
@@ -17,25 +17,25 @@
         <br>
         <button type="submit">Obtener Datos</button>
     </form>
-    <div id="result"></div>
 
     <script>
-        document.getElementById('dateForm').onsubmit = async function(event) {
-            event.preventDefault();
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-
-            const response = await fetch('/api/index', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ startDate, endDate }),
-            });
-
-            const result = await response.text();
-            document.getElementById('result').innerText = `Resultado: ${result}`;
+    document.addEventListener('DOMContentLoaded', () => {
+        // Verifica si hay datos pasados a la plantilla
+        const data = {{ data|tojson|safe }};
+        if (data) {
+            // Crea un Blob con los datos
+            const blob = new Blob([data], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            // Crea un enlace para descargar el archivo
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'datos.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
+    });
     </script>
 </body>
 </html>

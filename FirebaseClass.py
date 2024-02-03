@@ -2,6 +2,7 @@ from firebase_admin import credentials, firestore, initialize_app
 
 
 from datetime import datetime
+import json
 
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 class Firebase:
@@ -26,6 +27,8 @@ class Firebase:
         else:
             docs = self.firestore_client.collection(collection).stream()
         for doc in docs:
-            dict.append(doc.to_dict())
-        return dict
-        
+          doc_data = doc.to_dict()
+          filtered_data = {key: doc_data[key] for key in ['date', 'timestamp','devEUI'] if key in doc_data}
+        dict.append(filtered_data)
+        valores = {'total': len(dict), 'devices': dict}  
+        return  json.dumps(valores, indent=4)
